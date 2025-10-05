@@ -1,4 +1,4 @@
 # private_multiclass_svm
 Official Pytorch Implementation of "Multi-Class Support Vector Machine with Differential Privacy" (NeurIPS 2025)
 
-Code will be realeased soon.
+Code will be released soon.
