@@ -9,9 +9,9 @@ from tqdm import tqdm
 
 from opacus.accountants import GaussianAccountant
 
-from data_utils import load_dataset
-from dp_utils import calibrateAnalyticGaussianMechanism
-from model import M3SVM, regularized_loss
+from utils.data_utils import load_dataset
+from utils.dp_utils import calibrateAnalyticGaussianMechanism
+from models.model import M3SVM, regularized_loss
 
 class Trainer:
     def __init__(

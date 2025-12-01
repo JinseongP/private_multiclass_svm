@@ -144,11 +144,9 @@ def advanced_composition(epsilon, delta, k, tol=1e-6, max_iter=100):
     """Return ε₀ satisfying tight advanced composition equality."""
     A = math.sqrt(2 * k * math.log(1 / delta))
 
-    # function f(ε0) = LHS - ε
     def f(e0):
         return A * e0 + k * e0 * (math.exp(e0) - 1) - epsilon
 
-    # ε0 ∈ (0, ε]  ; f(0) < 0 , f(ε) > 0
     lo, hi = 0.0, epsilon
     for _ in range(max_iter):
         mid = (lo + hi) / 2
@@ -159,4 +157,3 @@ def advanced_composition(epsilon, delta, k, tol=1e-6, max_iter=100):
         if hi - lo < tol:
             break
     return (lo + hi) / 2
-#--------------------------------------------------------------

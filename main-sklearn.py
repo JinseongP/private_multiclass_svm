@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import time
 from sklearn.utils import check_random_state
 
-from gdp_account import *
+from utils.gdp_account import *
 
 class DPLinearSVC:
     """Differentially Private Linear SVC"""
@@ -50,8 +50,7 @@ class DPLinearSVC:
         
         # Get the model coefficients
         self.coef_ = base_model.coef_.copy()
-        print("1111", len(self.classes_))
-        if self.multi_class == "crammer_singer" and self.dp_method == "ours":
+        if self.multi_class == "crammer_singer" and self.dp_method == "pmsvm":
             # Calculate sensitivity for the privacy mechanism
             sensitivity = 4 * (2 ** 0.5) * self.C_over_n
             sigma = calibrateAnalyticGaussianMechanism(self.epsilon, self.delta, sensitivity)
@@ -64,14 +63,14 @@ class DPLinearSVC:
                 # For dpkl method, we don't add noise to weights
                 # Noise will be added at prediction time to outputs
                 print(f"Using dpkl method - will add noise to predictions")
-            elif self.dp_method == "privatesvm":          # 기존 (pure comp.)
+            elif self.dp_method == "privatesvm":
                 self.epsilon_per_class = self.epsilon / len(self.classes_)
                 sensitivity = 4 * self.C_over_n
                 sigma = sensitivity * np.sqrt(2 * np.log(1.25 / self.delta)) / self.epsilon_per_class
                 print(f"[privatesvm] sigma={sigma}")
                 self.coef_ += np.random.normal(0, sigma, self.coef_.shape)
             
-            elif self.dp_method == "opera":               # 기존 (analytic, pure comp.)
+            elif self.dp_method == "opera":
                 self.epsilon_per_class = self.epsilon / len(self.classes_)
                 sensitivity = 4 * self.C_over_n
                 sigma = calibrateAnalyticGaussianMechanism(
@@ -83,7 +82,7 @@ class DPLinearSVC:
                 k = len(self.classes_)
                 sensitivity = 4 * self.C_over_n
                 eps0 = advanced_composition(self.epsilon, self.delta, k)
-                delta0 = self.delta / k                     # 균등 분할
+                delta0 = self.delta / k
                 sigma = sensitivity * math.sqrt(2 * math.log(1.25 / delta0)) / eps0
             
                 print(f"[privatesvm-advcom] exact ε₀={eps0:.4f}, σ={sigma:.4f}")
@@ -116,7 +115,7 @@ class DPLinearSVC:
             else:                                                    # multi-class
                 probs = _softmax(raw_scores)
     
-            # 2) 노이즈 scale = 1 / ε   (OVR인 경우 ε_per_class 사용)
+            # Noise scale = 1 / epsilon
             eps_per = self.epsilon / len(self.classes_) if self.multi_class == "ovr" else self.epsilon
             noise_scale = 1.0 / eps_per
     
@@ -229,8 +228,8 @@ if __name__ == "__main__":
     parser.add_argument('--multi_class', type=str, default='ovr', 
                         choices=['ovr', 'crammer_singer'], 
                         help='Multi-class to use')
-    parser.add_argument('--dp_method', type=str, default='ours', 
-                        # choices=['ours', 'privatesvm', 'opera', 'dpkl'],
+    parser.add_argument('--dp_method', type=str, default='pmsvm',
+                        choices=['pmsvm', 'privatesvm', 'opera', 'dpkl'],
                         help='DP methods')
     para = parser.parse_args()
     para.test_size = 0.2
