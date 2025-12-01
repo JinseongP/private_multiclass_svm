@@ -10,6 +10,8 @@ Official Python Implementation of [**"Multi-Class Support Vector Machine with Di
   ```bash
   pip install -r requirements.txt
 ### 2. Run
+- Refer to the **run** folder detailed implementation including hyperparameter setting with .ipynb file.
+
 - Gradient Perturbation (Opacus)
 
   ```bash
@@ -18,7 +20,6 @@ Official Python Implementation of [**"Multi-Class Support Vector Machine with Di
 
   ```bash
 	python main-sklearn.py --data=Cornell
-- Refer to the **run** folder for .ipynb implementation.
 
 
 
