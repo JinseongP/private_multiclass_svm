@@ -21,8 +21,6 @@ Official Python Implementation of [**"Multi-Class Support Vector Machine with Di
   ```bash
 	python main-sklearn.py --data=Cornell
 
-
-
 ### 3. Citation
 We utilize the official GitHub of M3SVM (AAAI24): https://github.com/zz-haooo/M3SVM
 
